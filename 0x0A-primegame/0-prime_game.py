@@ -3,6 +3,7 @@
 Define isWinner function, a solution to the Prime Game problem
 """
 
+
 def sieve_of_eratosthenes(n):
     """Return a list of prime numbers up to n inclusive.
     """
@@ -13,6 +14,7 @@ def sieve_of_eratosthenes(n):
             for i in range(p * p, n + 1, p):
                 sieve[i] = False
     return [p for p in range(2, n + 1) if sieve[p]]
+
 
 def isWinner(x, nums):
     """
