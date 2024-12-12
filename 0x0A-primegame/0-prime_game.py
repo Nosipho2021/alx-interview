@@ -1,40 +1,42 @@
 #!/usr/bin/python3
-"""
-Define isWinner function, a solution to the Prime Game problem
-"""
-
-
-def sieve_of_eratosthenes(n):
-    """Return a list of prime numbers up to n inclusive.
-    """
-    sieve = [True] * (n + 1)
-    sieve[0] = sieve[1] = False
-    for p in range(2, int(n**0.5) + 1):
-        if sieve[p]:
-            for i in range(p * p, n + 1, p):
-                sieve[i] = False
-    return [p for p in range(2, n + 1) if sieve[p]]
 
 
 def isWinner(x, nums):
-    """
-    Determines the winner of the Prime Game.
-    """
-    if x <= 0 or not nums:
+    """Determines the winner of the prime game."""
+    if not nums or x < 1:
         return None
 
-    max_n = max(nums)
-    prime_count = sieve_of_eratosthenes(max_n)
-    maria_wins, ben_wins = 0, 0
+    # Find the maximum value in nums
+    max_num = max(nums)
+
+    # Sieve of Eratosthenes to precompute primes up to max_num
+    sieve = [True] * (max_num + 1)
+    sieve[0] = sieve[1] = False  # 0 and 1 are not prime
+
+    for i in range(2, int(max_num ** 0.5) + 1):
+        if sieve[i]:
+            for j in range(i * i, max_num + 1, i):
+                sieve[j] = False
+
+    # Precompute the number of primes up to each number
+    primes_count = [0] * (max_num + 1)
+    for i in range(1, max_num + 1):
+        primes_count[i] = primes_count[i - 1] + (1 if sieve[i] else 0)
+
+    # Determine the winner for each round
+    maria_wins = 0
+    ben_wins = 0
 
     for n in nums:
-        if len(prime_count[:n]) % 2 == 0:
-            ben_wins += 1
-        else:
+        if primes_count[n] % 2 == 1:  # Maria wins if odd primes
             maria_wins += 1
+        else:  # Ben wins if even primes
+            ben_wins += 1
 
+    # Determine the overall winner
     if maria_wins > ben_wins:
-        return 'Maria'
+        return "Maria"
     elif ben_wins > maria_wins:
-        return 'Ben'
+        return "Ben"
     return None
+
